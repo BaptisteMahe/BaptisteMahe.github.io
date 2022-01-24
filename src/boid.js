@@ -1,13 +1,12 @@
 class Boid {
 
-    static MAX_SPEED = 4;
-    static MAX_ACC = 0.2;
-
-    constructor() {
-        this.position =  createVector(random(width), random(height));
+    constructor(position) {
+        this.position =  createVector(position.x, position.y);
         this.velocity = p5.Vector.random2D();
         this.velocity.setMag(random(2, 4));
         this.acceleration = createVector();
+        this.maxSpeed = 4;
+        this.maxForce = 0.2;
     }
 
     edges() {
@@ -38,9 +37,9 @@ class Boid {
         }
         if (total > 0) {
             steering.div(total);
-            steering.setMag(Boid.MAX_SPEED);
+            steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
-            steering.limit(Boid.MAX_ACC);
+            steering.limit(this.maxForce);
         }
         return steering;
     }
@@ -62,9 +61,9 @@ class Boid {
         if (total > 0) {
             steering.div(total);
             steering.sub(this.position)
-            steering.setMag(Boid.MAX_SPEED);
+            steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
-            steering.limit(Boid.MAX_ACC);
+            steering.limit(this.maxForce);
         }
         return steering;
     }
@@ -87,9 +86,9 @@ class Boid {
         }
         if (total > 0) {
             steering.div(total);
-            steering.setMag(Boid.MAX_SPEED);
+            steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
-            steering.limit(Boid.MAX_ACC);
+            steering.limit(this.maxForce);
         }
         return steering;
     }
@@ -98,6 +97,11 @@ class Boid {
         let alignment = this.align(boids);
         let cohesion = this.cohesion(boids);
         let separation = this.separation(boids);
+
+        alignment.mult(alignSlider.value());
+        cohesion.mult(cohesionSlider.value());
+        separation.mult(separationSlider.value());
+
         this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
         this.acceleration.add(separation);
@@ -106,13 +110,16 @@ class Boid {
     update() {
         this.position.add(this.velocity);
         this.velocity.add(this.acceleration);
-        this.velocity.limit(Boid.MAX_SPEED);
+        this.velocity.limit(this.maxSpeed);
         this.acceleration.mult(0);
     }
 
     show() {
         strokeWeight(8);
         stroke(255);
+
+        // p5.Vector.setMag(this.velocity, 1)
+        // triangle((this.position.x + this.velocity.x));
         point(this.position.x, this.position.y);
     }
 
