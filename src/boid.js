@@ -117,10 +117,19 @@ class Boid {
     show() {
         strokeWeight(8);
         stroke(255);
+        fill(200);
 
-        // p5.Vector.setMag(this.velocity, 1)
-        // triangle((this.position.x + this.velocity.x));
-        point(this.position.x, this.position.y);
+        const forward = this.velocity.copy();
+        forward.setMag(1);
+        const left = p5.Vector.rotate(forward, 2 * PI / 3);
+        left.setMag(0.5);
+        const right = p5.Vector.rotate(forward, - 2 * PI / 3);
+        right.setMag(0.5);
+        triangle(this.position.x + forward.x,
+            this.position.y + forward.y,
+            this.position.x + left.x,
+            this.position.y + left.y,
+            this.position.x + right.x,
+            this.position.y + right.y);
     }
-
 }
