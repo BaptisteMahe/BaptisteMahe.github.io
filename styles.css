@@ -1,6 +1,11 @@
 body {
-    margin: 0;
+    margin: 20px 0 0;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.slider {
+    display: flex;
+    margin: 3px;
 }
