@@ -1,5 +1,5 @@
 const flock = [];
-const FLOCK_START_SIZE = 50;
+const FLOCK_START_SIZE = 200;
 const FLOCK_MAX_SIZE = 100;
 
 let alignSlider, cohesionSlider, separationSlider;
@@ -16,7 +16,7 @@ function setup() {
 }
 
 function draw() {
-    background(51);
+    background(0);
 
     flock.forEach(boid => {
         boid.edges();
