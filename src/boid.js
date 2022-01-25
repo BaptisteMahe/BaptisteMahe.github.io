@@ -28,55 +28,61 @@ class Boid {
             this.position.y = height;
     }
 
-    align(boids) {
+    align(quadtree) {
         let steering = createVector();
-        let flockMates = [];
-        for (let other of boids) {
+        let total = 0;
+        let others = quadtree.query(new Circle(this.position.x, this.position.y, this.alignRadius))
+            .map(point => point.data);
+        for (let other of others) {
             let distance = dist(this.position.x,
                 this.position.y,
                 other.position.x,
                 other.position.y);
             if (other !== this && distance < this.alignRadius) {
                 steering.add(other.velocity);
-                flockMates.push(other);
+                total++;
             }
         }
-        if (flockMates.length > 0) {
-            steering.div(flockMates.length);
+        if (total > 0) {
+            steering.div(total);
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
             steering.limit(this.maxForce);
         }
-        return { steering, flockMates };
+        return steering;
     }
 
-    cohesion(boids) {
+    cohesion(quadtree) {
         let steering = createVector();
-        let flockMates = [];
-        for (let other of boids) {
+        let total = 0;
+        let others = quadtree.query(new Circle(this.position.x, this.position.y, this.cohesionRadius))
+            .map(point => point.data);
+        for (let other of others) {
             let distance = dist(this.position.x,
                 this.position.y,
                 other.position.x,
                 other.position.y);
             if (other !== this && distance < this.cohesionRadius) {
                 steering.add(other.position);
-                flockMates.push(other);
+                total++;
             }
         }
-        if (flockMates.length > 0) {
-            steering.div(flockMates.length);
+        if (total > 0) {
+            steering.div(total);
             steering.sub(this.position)
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
             steering.limit(this.maxForce);
         }
-        return { steering, flockMates };
+        return steering;
     }
 
-    separation(boids) {
+    separation(quadtree) {
         let steering = createVector();
-        let flockMates = [];
-        for (let other of boids) {
+        let total = 0;
+        let others = quadtree.query(new Circle(this.position.x, this.position.y, this.separationRadius))
+            .map(point => point.data);
+        for (let other of others) {
             let distance = dist(this.position.x,
                 this.position.y,
                 other.position.x,
@@ -85,30 +91,30 @@ class Boid {
                 let diff = p5.Vector.sub(this.position, other.position);
                 diff.div(distance);
                 steering.add(diff);
-                flockMates.push(other);
+                total++;
             }
         }
-        if (flockMates.length > 0) {
-            steering.div(flockMates.length);
+        if (total > 0) {
+            steering.div(total);
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
             steering.limit(this.maxForce);
         }
-        return { steering, flockMates };
+        return steering;
     }
 
-    flock(boids) {
-        let alignment = this.align(boids);
-        let cohesion = this.cohesion(alignment.flockMates);
-        let separation = this.separation(cohesion.flockMates);
+    flock(quadtree) {
+        let alignment = this.align(quadtree);
+        let cohesion = this.cohesion(quadtree);
+        let separation = this.separation(quadtree);
 
-        alignment.steering.mult(alignSlider.value());
-        cohesion.steering.mult(cohesionSlider.value());
-        separation.steering.mult(separationSlider.value());
+        alignment.mult(alignSlider.value());
+        cohesion.mult(cohesionSlider.value());
+        separation.mult(separationSlider.value());
 
-        this.acceleration.add(alignment.steering);
-        this.acceleration.add(cohesion.steering);
-        this.acceleration.add(separation.steering);
+        this.acceleration.add(alignment);
+        this.acceleration.add(cohesion);
+        this.acceleration.add(separation);
     }
 
     update() {
@@ -118,22 +124,33 @@ class Boid {
         this.acceleration.mult(0);
     }
 
-    show() {
-        strokeWeight(2);
-        stroke(255);
-        fill(150);
-
+    show(debug = false) {
         const forward = this.velocity.copy();
         forward.setMag(this.size);
         const left = p5.Vector.rotate(forward, 2 * PI / 3);
         left.setMag(this.size / 2);
         const right = p5.Vector.rotate(forward, - 2 * PI / 3);
         right.setMag(this.size / 2);
+
+        strokeWeight(2);
+        stroke(255);
+        fill(150);
         triangle(this.position.x + forward.x,
             this.position.y + forward.y,
             this.position.x + left.x,
             this.position.y + left.y,
             this.position.x + right.x,
             this.position.y + right.y);
+
+        if (debug) {
+            strokeWeight(1);
+            stroke(0, 0, 255);
+            noFill();
+            circle(this.position.x, this.position.y, this.alignRadius);
+            stroke(0, 255, 0);
+            circle(this.position.x, this.position.y, this.cohesionRadius);
+            stroke(255, 0, 0);
+            circle(this.position.x, this.position.y, this.separationRadius);
+        }
     }
 }
