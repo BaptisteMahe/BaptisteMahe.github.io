@@ -10,10 +10,15 @@ class Boid {
         this.cohesionRadius = 50;
         this.separationRadius = 30;
 
-        this.maxSpeed = 4;
-        this.maxForce = 0.1;
+        this.maxSpeed = 2;
+        this.maxForce = 0.05;
 
         this.size = 15;
+
+        this.color = {
+            stroke: [150],
+            fill: [random(200), random(200), random(200)]
+        };
     }
 
     edges() {
@@ -98,8 +103,8 @@ class Boid {
         right.setMag(this.size / 2);
 
         strokeWeight(2);
-        stroke(255);
-        fill(150);
+        stroke(this.color.stroke);
+        fill(this.color.fill);
         triangle(this.position.x + forward.x,
             this.position.y + forward.y,
             this.position.x + left.x,

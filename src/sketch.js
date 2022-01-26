@@ -10,9 +10,9 @@ let quadtree;
 function setup() {
     createCanvas(windowWidth, windowHeight);
 
-    alignSlider = createSliderWithLabel("Alignment", 0, 5, 1.5, 0.1);
-    cohesionSlider = createSliderWithLabel("Cohesion", 0, 5, 1.5, 0.1);
-    separationSlider = createSliderWithLabel("Separation", 0, 5, 2.5, 0.1);
+    alignSlider = createSliderWithLabel("Alignment", 0, 5, 1, 0.1);
+    cohesionSlider = createSliderWithLabel("Cohesion", 0, 5, 1, 0.1);
+    separationSlider = createSliderWithLabel("Separation", 0, 5, 1.5, 0.1);
 
     for (let index = 0; index < FLOCK_START_SIZE; index++)
         flock.push(new Boid({ x: random(width), y: random(height) }));
