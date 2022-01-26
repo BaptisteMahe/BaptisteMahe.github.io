@@ -11,7 +11,7 @@ class Boid {
         this.separationRadius = 30;
 
         this.maxSpeed = 4;
-        this.maxForce = 0.2;
+        this.maxForce = 0.1;
 
         this.size = 15;
     }
@@ -24,68 +24,48 @@ class Boid {
         else if (this.position.y < 0) this.position.y = height;
     }
 
-    align(quadtree) {
+    baseSteeringCompute(quadtree, radius, onOtherFound, onAfterCompute = () => { }) {
         let steering = createVector();
-        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, this.alignRadius))
-            .map(point => point.data);
+        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, radius));
 
         for (let other of flockMates) {
-            if (other === this) continue;
-            steering.add(other.velocity);
+            if (other.data === this) continue;
+            onOtherFound(other, steering);
         }
 
         if (flockMates.length - 1 > 0) {
             steering.div(flockMates.length - 1);
+            onAfterCompute(steering);
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
             steering.limit(this.maxForce);
         }
+
         return steering;
+    }
+
+    align(quadtree) {
+        return this.baseSteeringCompute(quadtree, this.alignRadius,
+            (other, steering) => steering.add(other.data.velocity));
     }
 
     cohesion(quadtree) {
-        let steering = createVector();
-        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, this.cohesionRadius))
-            .map(point => point.data);
-
-        for (let other of flockMates) {
-            if (other === this) continue;
-            steering.add(other.position);
-        }
-
-        if (flockMates.length - 1 > 0) {
-            steering.div(flockMates.length - 1);
-            steering.sub(this.position)
-            steering.setMag(this.maxSpeed);
-            steering.sub(this.velocity);
-            steering.limit(this.maxForce);
-        }
-        return steering;
+        return this.baseSteeringCompute(quadtree, this.cohesionRadius,
+            (other, steering) => steering.add(other.data.position),
+            (steering) => steering.sub(this.position));
     }
 
     separation(quadtree) {
-        let steering = createVector();
-        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, this.separationRadius))
-            .map(point => point.data);
-
-        for (let other of flockMates) {
-            if (other === this) continue;
-            let distance = dist(this.position.x,
-                this.position.y,
-                other.position.x,
-                other.position.y);
-            let diff = p5.Vector.sub(this.position, other.position);
-            diff.div(distance);
-            steering.add(diff);
-        }
-
-        if (flockMates.length - 1 > 0) {
-            steering.div(flockMates.length - 1);
-            steering.setMag(this.maxSpeed);
-            steering.sub(this.velocity);
-            steering.limit(this.maxForce);
-        }
-        return steering;
+        return this.baseSteeringCompute(quadtree, this.separationRadius,
+            (other, steering) => {
+                let distance = dist(this.position.x,
+                    this.position.y,
+                    other.data.position.x,
+                    other.data.position.y);
+                let diff = p5.Vector.sub(this.position, other.data.position);
+                diff.div(distance);
+                steering.add(diff);
+            });
     }
 
     flock(quadtree) {
