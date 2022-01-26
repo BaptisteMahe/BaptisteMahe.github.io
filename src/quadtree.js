@@ -124,6 +124,21 @@ class QuadTree {
         return found;
     }
 
+    resize(boundary) {
+        this.boundary = boundary;
+    }
+
+    clear() {
+        this.points = [];
+
+        this.northwest = null;
+        this.northeast = null;
+        this.southwest = null;
+        this.southeast = null;
+
+        this.divided = false;
+    }
+
     show() {
         stroke(255);
         noFill();

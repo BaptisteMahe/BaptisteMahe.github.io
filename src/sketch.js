@@ -17,12 +17,13 @@ function setup() {
     for (let index = 0; index < FLOCK_START_SIZE; index++)
         flock.push(new Boid({ x: random(width), y: random(height) }));
 
+    quadtree = new QuadTree(new Rectangle(width / 2, height / 2, width / 2, height / 2), 5);
 }
 
 function draw() {
     background(0);
 
-    quadtree = new QuadTree(new Rectangle(width / 2, height / 2, width / 2, height / 2), 5);
+    quadtree.clear();
     for (let boid of flock) quadtree.insert(new Point(boid.position.x, boid.position.y, boid));
     quadtree.show();
 
@@ -42,6 +43,7 @@ function draw() {
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
+    quadtree.resize(new Rectangle(width / 2, height / 2, width / 2, height / 2));
 }
 
 function createSliderWithLabel(label, start, stop, init, step) {
