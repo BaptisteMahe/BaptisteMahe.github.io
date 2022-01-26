@@ -6,9 +6,9 @@ class Boid {
         this.velocity.setMag(random(2, 4));
         this.acceleration = createVector();
 
-        this.alignRadius = 150;
-        this.cohesionRadius = 100;
-        this.separationRadius = 50
+        this.alignRadius = 100;
+        this.cohesionRadius = 50;
+        this.separationRadius = 30;
 
         this.maxSpeed = 4;
         this.maxForce = 0.2;
@@ -17,34 +17,25 @@ class Boid {
     }
 
     edges() {
-        if (this.position.x > width)
-            this.position.x = 0;
-        else if (this.position.x < 0)
-            this.position.x = width;
+        if (this.position.x > width) this.position.x = 0;
+        else if (this.position.x < 0) this.position.x = width;
 
-        if (this.position.y > height)
-            this.position.y = 0;
-        else if (this.position.y < 0)
-            this.position.y = height;
+        if (this.position.y > height) this.position.y = 0;
+        else if (this.position.y < 0) this.position.y = height;
     }
 
     align(quadtree) {
         let steering = createVector();
-        let total = 0;
-        let others = quadtree.query(new Circle(this.position.x, this.position.y, this.alignRadius))
+        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, this.alignRadius))
             .map(point => point.data);
-        for (let other of others) {
-            let distance = dist(this.position.x,
-                this.position.y,
-                other.position.x,
-                other.position.y);
-            if (other !== this && distance < this.alignRadius) {
-                steering.add(other.velocity);
-                total++;
-            }
+
+        for (let other of flockMates) {
+            if (other === this) continue;
+            steering.add(other.velocity);
         }
-        if (total > 0) {
-            steering.div(total);
+
+        if (flockMates.length - 1 > 0) {
+            steering.div(flockMates.length - 1);
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
             steering.limit(this.maxForce);
@@ -54,21 +45,16 @@ class Boid {
 
     cohesion(quadtree) {
         let steering = createVector();
-        let total = 0;
-        let others = quadtree.query(new Circle(this.position.x, this.position.y, this.cohesionRadius))
+        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, this.cohesionRadius))
             .map(point => point.data);
-        for (let other of others) {
-            let distance = dist(this.position.x,
-                this.position.y,
-                other.position.x,
-                other.position.y);
-            if (other !== this && distance < this.cohesionRadius) {
-                steering.add(other.position);
-                total++;
-            }
+
+        for (let other of flockMates) {
+            if (other === this) continue;
+            steering.add(other.position);
         }
-        if (total > 0) {
-            steering.div(total);
+
+        if (flockMates.length - 1 > 0) {
+            steering.div(flockMates.length - 1);
             steering.sub(this.position)
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
@@ -79,23 +65,22 @@ class Boid {
 
     separation(quadtree) {
         let steering = createVector();
-        let total = 0;
-        let others = quadtree.query(new Circle(this.position.x, this.position.y, this.separationRadius))
+        let flockMates = quadtree.query(new Circle(this.position.x, this.position.y, this.separationRadius))
             .map(point => point.data);
-        for (let other of others) {
+
+        for (let other of flockMates) {
+            if (other === this) continue;
             let distance = dist(this.position.x,
                 this.position.y,
                 other.position.x,
                 other.position.y);
-            if (other !== this && distance < this.separationRadius) {
-                let diff = p5.Vector.sub(this.position, other.position);
-                diff.div(distance);
-                steering.add(diff);
-                total++;
-            }
+            let diff = p5.Vector.sub(this.position, other.position);
+            diff.div(distance);
+            steering.add(diff);
         }
-        if (total > 0) {
-            steering.div(total);
+
+        if (flockMates.length - 1 > 0) {
+            steering.div(flockMates.length - 1);
             steering.setMag(this.maxSpeed);
             steering.sub(this.velocity);
             steering.limit(this.maxForce);

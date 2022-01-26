@@ -8,7 +8,7 @@ let alignSlider, cohesionSlider, separationSlider;
 let quadtree;
 
 function setup() {
-    createCanvas(1000, 700);
+    createCanvas(windowWidth, windowHeight);
 
     alignSlider = createSliderWithLabel("Alignment", 0, 5, 1.5, 0.1);
     cohesionSlider = createSliderWithLabel("Cohesion", 0, 5, 1.5, 0.1);
@@ -22,7 +22,7 @@ function setup() {
 function draw() {
     background(0);
 
-    quadtree = new QuadTree(new Rectangle(width / 2, height / 2, width / 2, height / 2), 10);
+    quadtree = new QuadTree(new Rectangle(width / 2, height / 2, width / 2, height / 2), 5);
     for (let boid of flock) quadtree.insert(new Point(boid.position.x, boid.position.y, boid));
     quadtree.show();
 
@@ -36,9 +36,12 @@ function draw() {
     if (mouseIsPressed && mouseX < width && mouseY < height) {
         flock.push(new Boid({ x: mouseX, y: mouseY }));
         if (flock.length > FLOCK_MAX_SIZE) flock.shift();
-        // console.log("Size: " + flock.length, "Frame rate: " + frameRate());
+        console.log("Size: " + flock.length, "Frame rate: " + frameRate());
     }
-    console.log(frameRate());
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 }
 
 function createSliderWithLabel(label, start, stop, init, step) {
