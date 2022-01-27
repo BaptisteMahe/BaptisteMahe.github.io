@@ -2,6 +2,8 @@
 
 Live here [https://baptistemahe.github.io](https://baptistemahe.github.io)
 
+Portfolio live here [https://baptistemahe.github.io/portfolio](https://baptistemahe.github.io/portfolio)
+
 
 ## 📃 My resume :
 
