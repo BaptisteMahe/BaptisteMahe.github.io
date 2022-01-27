@@ -46,7 +46,7 @@ class Circle {
         let xDist = Math.abs(range.x - this.x);
         let yDist = Math.abs(range.y - this.y);
 
-        let edges = Math.pow(xDist - range.w, 2) + Math.pow(yDist - h, 2);
+        let edges = Math.pow(xDist - range.w, 2) + Math.pow(yDist - range.h, 2);
 
         // no intersection
         if (xDist > this.r + range.w || yDist > this.r + range.h) return false;
