@@ -6,6 +6,7 @@ body {
   overflow: hidden;
   color: white;
   background-color: black;
+  font-size: 30px;
 }
 
 #sketch {
@@ -81,18 +82,69 @@ body {
   margin: 15px 0;
   font-size: 40px;
 }
-.content-container .content-wrapper .stacks-content a {
+.content-container .content-wrapper .stacks-section .stacks-content a {
   text-decoration: none;
 }
-.content-container .content-wrapper .stacks-content a > img {
+.content-container .content-wrapper .stacks-section .stacks-content a > img {
   margin: 5px 10px;
   width: 70px;
   height: 70px;
 }
-.content-container .content-wrapper .stacks-content a .png-img {
+.content-container .content-wrapper .stacks-section .stacks-content a .png-img {
   width: auto;
   height: auto;
   max-width: 70px;
+}
+.content-container .content-wrapper .projects-section .projects-list {
+  display: flex;
+}
+.content-container .content-wrapper .projects-section .projects-list .project-link {
+  padding: 15px;
+  margin: 10px;
+  color: white;
+  border-radius: 10px;
+  border: 2px solid white;
+  background-color: rgba(255, 255, 255, 0.2);
+  text-decoration: none;
+  font-size: 15px;
+}
+.content-container .content-wrapper .projects-section .projects-list .project-link .project-img {
+  height: 120px;
+  margin-bottom: 5px;
+}
+.content-container .content-wrapper .education-section .centrale-logo {
+  height: 200px;
+  margin-bottom: 10px;
+}
+.content-container .content-wrapper .education-section .resume-sub-section {
+  margin-top: 10px;
+}
+.content-container .content-wrapper .education-section .resume-sub-section .resume-links {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.content-container .content-wrapper .education-section .resume-sub-section .resume-links a {
+  text-decoration: none;
+  margin: 0 15px;
+}
+.content-container .content-wrapper .education-section .resume-sub-section .resume-links a > img {
+  width: 70px;
+  height: 80px;
+}
+.content-container .content-wrapper .education-section .resume-sub-section .resume-links a > div {
+  color: white;
+}
+.content-container .content-wrapper .contact-section .social-networks {
+  display: flex;
+  justify-content: center;
+}
+.content-container .content-wrapper .contact-section .social-networks .contact-link {
+  margin: 0 15px;
+}
+.content-container .content-wrapper .contact-section .social-networks .contact-link > img {
+  width: 70px;
+  height: 70px;
 }
 
 ::-webkit-scrollbar {

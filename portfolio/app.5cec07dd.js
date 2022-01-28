@@ -29208,12 +29208,10 @@ function () {
       boid.show();
     }
 
-    if (addOnClick && this.p5.mouseIsPressed && this.p5.mouseX < this.p5.width && this.p5.mouseY < this.p5.height) {
-      this.add(new boid_1.Boid(this.p5, {
-        x: this.p5.mouseX,
-        y: this.p5.mouseY
-      })); // console.log("Size: " + flock.size(), "Frame rate: " + p5.frameRate());
-    }
+    if (addOnClick && this.p5.mouseIsPressed && this.p5.mouseX < this.p5.width && this.p5.mouseY < this.p5.height) this.add(new boid_1.Boid(this.p5, {
+      x: this.p5.mouseX,
+      y: this.p5.mouseY
+    }));
   };
 
   Flock.prototype.add = function (boid) {
@@ -29311,7 +29309,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64090" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53334" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
