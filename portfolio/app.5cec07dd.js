@@ -29254,7 +29254,12 @@ var sketch = function sketch(p5) {
   var flock;
   var hideFlockButton;
   var hideFlock = false;
-  var addOnClick = true;
+  var hideContentButton;
+  var hideContent = false;
+  var addBoidOnClick = true;
+  var contentContainer;
+  var fadeInElements = [];
+  var contactLinks;
 
   p5.setup = function () {
     var canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
@@ -29266,21 +29271,61 @@ var sketch = function sketch(p5) {
       hideFlockButton.textContent = "".concat(hideFlock ? 'Show' : 'Hide', " flock");
     };
 
+    contentContainer = document.querySelector(".content-container");
+    hideContentButton = document.querySelector("#hide-content-button");
+
+    hideContentButton.onclick = function () {
+      hideContent = !hideContent;
+      hideContentButton.textContent = "".concat(hideContent ? 'Show' : 'Hide', " text");
+      hideContent ? contentContainer.classList.add('hidden') : contentContainer.classList.remove('hidden');
+    };
+
+    document.querySelectorAll(".stacks-content > a > img").forEach(function (elem) {
+      return fadeInElements.push(elem);
+    });
+    document.querySelectorAll(".projects-list > a").forEach(function (elem) {
+      return fadeInElements.push(elem);
+    });
+    fadeInElements.push(document.querySelector("#clean-code-img"));
+    contactLinks = document.querySelectorAll(".social-networks > a");
+
+    contentContainer.onscroll = function () {
+      setOpacityOnScroll(fadeInElements, contentContainer.scrollTop);
+      setOpacityOnScroll(contactLinks, contentContainer.scrollTop, 1);
+      if (contentContainer.scrollTop + window.innerHeight >= contentContainer.scrollHeight) contactLinks.forEach(function (contactLink) {
+        return contactLink.classList.add("contact-link-animation");
+      });else contactLinks.forEach(function (contactLink) {
+        return contactLink.classList.remove("contact-link-animation");
+      });
+    };
+
+    setOpacityOnScroll(fadeInElements, contentContainer.scrollTop);
     flock = new flock_1.Flock(p5, FLOCK_START_SIZE, FLOCK_MAX_SIZE);
   };
 
   p5.draw = function () {
     p5.background(0);
-    if (!hideFlock) flock.update(addOnClick);
+    if (!hideFlock) flock.update(addBoidOnClick);
   };
 
   p5.windowResized = function () {
     p5.resizeCanvas(p5.windowWidth, p5.windowHeight);
     flock.resizeTank(p5.windowWidth, p5.windowHeight);
+    setOpacityOnScroll(fadeInElements, contentContainer.scrollTop);
   };
 };
 
 new p5_1.default(sketch);
+
+function setOpacityOnScroll(elements, currentScroll, heightCoef) {
+  if (heightCoef === void 0) {
+    heightCoef = 2;
+  }
+
+  elements.forEach(function (element) {
+    element.style.opacity = String((currentScroll + window.innerHeight - element.offsetTop) / (heightCoef * element.scrollHeight));
+  });
+}
 },{"p5":"node_modules/p5/lib/p5.min.js","./flock/flock":"src/flock/flock.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -29309,7 +29354,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53334" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63218" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
