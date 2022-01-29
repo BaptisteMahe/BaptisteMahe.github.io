@@ -184,14 +184,19 @@ h1 {
 }
 
 @media screen and (max-width: 600px) {
+  .global-actions .big-button {
+    padding: 5px 10px;
+    font-size: 15px;
+  }
+
   .content-container .content-wrapper {
-    max-width: 100%;
+    max-width: 95%;
   }
   .content-container .content-wrapper .title {
     font-size: 50px;
   }
   .content-container .content-wrapper .hero .hero-content {
-    max-width: 100%;
+    max-width: 95%;
   }
 }
 @media screen and (max-width: 950px) {

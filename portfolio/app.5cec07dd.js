@@ -29291,7 +29291,7 @@ var sketch = function sketch(p5) {
 
     contentContainer.onscroll = function () {
       setOpacityOnScroll(fadeInElements, contentContainer.scrollTop);
-      setOpacityOnScroll(contactLinks, contentContainer.scrollTop, 1);
+      setOpacityOnScroll(contactLinks, contentContainer.scrollTop);
       if (contentContainer.scrollTop + window.innerHeight >= contentContainer.scrollHeight) contactLinks.forEach(function (contactLink) {
         return contactLink.classList.add("contact-link-animation");
       });else contactLinks.forEach(function (contactLink) {
@@ -29319,7 +29319,7 @@ new p5_1.default(sketch);
 
 function setOpacityOnScroll(elements, currentScroll, heightCoef) {
   if (heightCoef === void 0) {
-    heightCoef = 2;
+    heightCoef = 1;
   }
 
   elements.forEach(function (element) {
@@ -29354,7 +29354,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63218" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64154" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
