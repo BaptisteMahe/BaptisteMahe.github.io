@@ -28,6 +28,24 @@ h1 {
   font-size: 40px;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.button {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 10px;
+  border: 2px solid white;
+  padding: 5px 10px;
+  opacity: 0.7;
+}
+.button:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
 .global-actions {
   position: absolute;
   top: 0;
@@ -43,15 +61,41 @@ h1 {
 .global-actions .big-button {
   padding: 10px 15px;
   font-size: 20px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0);
+}
+
+.boid-controller-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.boid-controller-wrapper .boid-controller {
+  margin-top: -10px;
+  padding: 15px;
+  text-align: center;
   border-radius: 10px;
   border: 2px solid white;
-  opacity: 0.7;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-size: 20px;
 }
-.global-actions .big-button:hover {
-  cursor: pointer;
-  opacity: 1;
+.boid-controller-wrapper .boid-controller h1 {
+  margin-top: 10px;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers h5 {
+  font-size: 30px;
+  margin: 10px;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers .coef-and-radius-wrapper {
+  display: flex;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers .coef-and-radius-wrapper > div {
+  margin: 0 10px;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers .boid-controller-buttons > button {
+  margin: 15px 5px 0;
 }
 
 .content-container {
@@ -98,9 +142,6 @@ h1 {
 .content-container .content-wrapper .stacks-title {
   margin: 15px 0;
 }
-.content-container .content-wrapper .stacks-section .stacks-content a {
-  text-decoration: none;
-}
 .content-container .content-wrapper .stacks-section .stacks-content a > img {
   margin: 5px 10px;
   width: 70px;
@@ -117,11 +158,9 @@ h1 {
 .content-container .content-wrapper .projects-section .projects-list .project-link {
   padding: 15px;
   margin: 10px;
-  color: white;
   border-radius: 10px;
   border: 2px solid white;
   background-color: rgba(255, 255, 255, 0.2);
-  text-decoration: none;
   font-size: 15px;
 }
 .content-container .content-wrapper .projects-section .projects-list .project-link .project-img {
@@ -142,15 +181,11 @@ h1 {
   margin-top: 10px;
 }
 .content-container .content-wrapper .education-section .resume-sub-section .resume-links a {
-  text-decoration: none;
   margin: 0 15px;
 }
 .content-container .content-wrapper .education-section .resume-sub-section .resume-links a > img {
   width: 70px;
   height: 80px;
-}
-.content-container .content-wrapper .education-section .resume-sub-section .resume-links a > div {
-  color: white;
 }
 .content-container .content-wrapper .contact-section .social-networks {
   display: flex;

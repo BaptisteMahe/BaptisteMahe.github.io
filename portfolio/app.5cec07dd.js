@@ -28872,6 +28872,21 @@ function () {
 }();
 
 exports.Circle = Circle;
+},{}],"src/flock/constant.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.DEFAULT_MAX_FORCE = exports.DEFAULT_MAX_SPEED = exports.DEFAULT_SEPARATION_COEFFICIENT = exports.DEFAULT_COHESION_COEFFICIENT = exports.DEFAULT_ALIGN_COEFFICIENT = exports.DEFAULT_SEPARATION_RADIUS = exports.DEFAULT_COHESION_RADIUS = exports.DEFAULT_ALIGN_RADIUS = void 0;
+exports.DEFAULT_ALIGN_RADIUS = 100;
+exports.DEFAULT_COHESION_RADIUS = 50;
+exports.DEFAULT_SEPARATION_RADIUS = 30;
+exports.DEFAULT_ALIGN_COEFFICIENT = 1;
+exports.DEFAULT_COHESION_COEFFICIENT = 1;
+exports.DEFAULT_SEPARATION_COEFFICIENT = 1.5;
+exports.DEFAULT_MAX_SPEED = 2;
+exports.DEFAULT_MAX_FORCE = 0.05;
 },{}],"src/flock/boid.ts":[function(require,module,exports) {
 "use strict";
 
@@ -28890,6 +28905,8 @@ var p5_1 = __importDefault(require("p5"));
 
 var circle_1 = require("../quadtree/shapes/circle");
 
+var constant_1 = require("./constant");
+
 var Boid =
 /** @class */
 function () {
@@ -28899,14 +28916,14 @@ function () {
     this.velocity = p5_1.default.Vector.random2D();
     this.velocity.setMag(this.p5.random(2, 4));
     this.acceleration = this.p5.createVector();
-    this.alignRadius = 100;
-    this.cohesionRadius = 50;
-    this.separationRadius = 30;
-    this.alignCoef = 1;
-    this.cohesionCoef = 1;
-    this.separationCoef = 1.5;
-    this.maxSpeed = 2;
-    this.maxForce = 0.05;
+    this.alignRadius = constant_1.DEFAULT_ALIGN_RADIUS;
+    this.cohesionRadius = constant_1.DEFAULT_COHESION_RADIUS;
+    this.separationRadius = constant_1.DEFAULT_SEPARATION_RADIUS;
+    this.alignCoefficient = constant_1.DEFAULT_ALIGN_COEFFICIENT;
+    this.cohesionCoefficient = constant_1.DEFAULT_COHESION_COEFFICIENT;
+    this.separationCoefficient = constant_1.DEFAULT_SEPARATION_COEFFICIENT;
+    this.maxSpeed = constant_1.DEFAULT_MAX_SPEED;
+    this.maxForce = constant_1.DEFAULT_MAX_FORCE;
     this.size = 15;
     this.color = {
       stroke: [100],
@@ -28968,25 +28985,18 @@ function () {
     });
   };
 
-  Boid.prototype.flock = function (quadtree, alignCoef, cohesionCoef, separationCoef) {
-    if (alignCoef === void 0) {
-      alignCoef = this.alignCoef;
-    }
-
-    if (cohesionCoef === void 0) {
-      cohesionCoef = this.cohesionCoef;
-    }
-
-    if (separationCoef === void 0) {
-      separationCoef = this.separationCoef;
-    }
-
+  Boid.prototype.flock = function (quadtree, options) {
+    this.alignRadius = options.alignRadius;
+    this.cohesionRadius = options.cohesionRadius;
+    this.separationRadius = options.separationRadius;
+    this.maxSpeed = options.maxSpeed;
+    this.maxForce = options.maxForce;
     var alignment = this.align(quadtree);
     var cohesion = this.cohesion(quadtree);
     var separation = this.separation(quadtree);
-    alignment.mult(alignCoef);
-    cohesion.mult(cohesionCoef);
-    separation.mult(separationCoef);
+    alignment.mult(options.alignCoefficient);
+    cohesion.mult(options.cohesionCoefficient);
+    separation.mult(options.separationCoefficient);
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
     this.acceleration.add(separation);
@@ -28999,9 +29009,9 @@ function () {
     this.acceleration.mult(0);
   };
 
-  Boid.prototype.show = function (debug) {
-    if (debug === void 0) {
-      debug = false;
+  Boid.prototype.show = function (showRadius) {
+    if (showRadius === void 0) {
+      showRadius = false;
     }
 
     var forward = this.velocity.copy();
@@ -29015,7 +29025,7 @@ function () {
     this.p5.fill(this.color.fill);
     this.p5.triangle(this.position.x + forward.x, this.position.y + forward.y, this.position.x + left.x, this.position.y + left.y, this.position.x + right.x, this.position.y + right.y);
 
-    if (debug) {
+    if (showRadius) {
       this.p5.strokeWeight(1);
       this.p5.stroke(0, 0, 255);
       this.p5.noFill();
@@ -29031,7 +29041,7 @@ function () {
 }();
 
 exports.Boid = Boid;
-},{"p5":"node_modules/p5/lib/p5.min.js","../quadtree/shapes/circle":"src/quadtree/shapes/circle.ts"}],"src/quadtree/shapes/rectangle.ts":[function(require,module,exports) {
+},{"p5":"node_modules/p5/lib/p5.min.js","../quadtree/shapes/circle":"src/quadtree/shapes/circle.ts","./constant":"src/flock/constant.ts"}],"src/quadtree/shapes/rectangle.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29188,7 +29198,7 @@ function () {
     this.quadtree = new quadtree_1.QuadTree(new rectangle_1.Rectangle(p5.width / 2, p5.height / 2, p5.width / 2, p5.height / 2), 5);
   }
 
-  Flock.prototype.update = function (addOnClick) {
+  Flock.prototype.update = function (options) {
     this.quadtree.clear();
 
     for (var _i = 0, _a = this.boids; _i < _a.length; _i++) {
@@ -29200,15 +29210,17 @@ function () {
       });
     }
 
+    if (options === null || options === void 0 ? void 0 : options.showQuadtree) this.quadtree.show(this.p5);
+
     for (var _b = 0, _c = this.boids; _b < _c.length; _b++) {
       var boid = _c[_b];
       boid.edges();
-      boid.flock(this.quadtree);
+      boid.flock(this.quadtree, options);
       boid.update();
-      boid.show();
+      boid.show(options.showRadius);
     }
 
-    if (addOnClick && this.p5.mouseIsPressed && this.p5.mouseX < this.p5.width && this.p5.mouseY < this.p5.height) this.add(new boid_1.Boid(this.p5, {
+    if ((options === null || options === void 0 ? void 0 : options.addBoidOnClick) && this.p5.mouseIsPressed && this.p5.mouseX < this.p5.width && this.p5.mouseY < this.p5.height) this.add(new boid_1.Boid(this.p5, {
       x: this.p5.mouseX,
       y: this.p5.mouseY
     }));
@@ -29248,6 +29260,8 @@ var p5_1 = __importDefault(require("p5"));
 
 var flock_1 = require("./flock/flock");
 
+var constant_1 = require("./flock/constant");
+
 var sketch = function sketch(p5) {
   var FLOCK_START_SIZE = 200;
   var FLOCK_MAX_SIZE = 400;
@@ -29256,7 +29270,21 @@ var sketch = function sketch(p5) {
   var hideFlock = false;
   var hideContentButton;
   var hideContent = false;
+  var boidController;
+  var alignCoefficientSlider;
+  var cohesionCoefficientSlider;
+  var separationCoefficientSlider;
+  var alignRadiusSlider;
+  var cohesionRadiusSlider;
+  var separationRadiusSlider;
+  var maxSpeedSlider;
+  var maxForceSlider;
+  var addBoidOnClickButton;
   var addBoidOnClick = true;
+  var showRadiusButton;
+  var showRadius = false;
+  var showQuadtreeButton;
+  var showQuadtree = false;
   var contentContainer;
   var fadeInElements = [];
   var contactLinks;
@@ -29264,6 +29292,14 @@ var sketch = function sketch(p5) {
   p5.setup = function () {
     var canvas = p5.createCanvas(p5.windowWidth, p5.windowHeight);
     canvas.parent("sketch");
+    alignCoefficientSlider = createSlider("align-coefficient-slider", constant_1.DEFAULT_ALIGN_COEFFICIENT);
+    cohesionCoefficientSlider = createSlider("cohesion-coefficient-slider", constant_1.DEFAULT_COHESION_COEFFICIENT);
+    separationCoefficientSlider = createSlider("separation-coefficient-slider", constant_1.DEFAULT_SEPARATION_COEFFICIENT);
+    alignRadiusSlider = createSlider("align-radius-slider", constant_1.DEFAULT_ALIGN_RADIUS);
+    cohesionRadiusSlider = createSlider("cohesion-radius-slider", constant_1.DEFAULT_COHESION_RADIUS);
+    separationRadiusSlider = createSlider("separation-radius-slider", constant_1.DEFAULT_SEPARATION_RADIUS);
+    maxSpeedSlider = createSlider("max-speed-slider", constant_1.DEFAULT_MAX_SPEED);
+    maxForceSlider = createSlider("max-force-slider", constant_1.DEFAULT_MAX_FORCE);
     hideFlockButton = document.querySelector("#hide-flock-button");
 
     hideFlockButton.onclick = function () {
@@ -29271,15 +29307,38 @@ var sketch = function sketch(p5) {
       hideFlockButton.textContent = "".concat(hideFlock ? 'Show' : 'Hide', " flock");
     };
 
-    contentContainer = document.querySelector(".content-container");
     hideContentButton = document.querySelector("#hide-content-button");
 
     hideContentButton.onclick = function () {
       hideContent = !hideContent;
       hideContentButton.textContent = "".concat(hideContent ? 'Show' : 'Hide', " text");
       hideContent ? contentContainer.classList.add('hidden') : contentContainer.classList.remove('hidden');
+      hideContent ? boidController.classList.remove('hidden') : boidController.classList.add('hidden');
     };
 
+    addBoidOnClickButton = document.querySelector("#add-boid-button");
+
+    addBoidOnClickButton.onclick = function () {
+      addBoidOnClick = !addBoidOnClick;
+      addBoidOnClickButton.textContent = "".concat(addBoidOnClick ? 'Add' : 'Remove', " boid on click");
+    };
+
+    showRadiusButton = document.querySelector("#show-radius-button");
+
+    showRadiusButton.onclick = function () {
+      showRadius = !showRadius;
+      showRadiusButton.textContent = "".concat(showRadius ? 'Hide' : 'Show', " radius");
+    };
+
+    showQuadtreeButton = document.querySelector("#show-quadtree-button");
+
+    showQuadtreeButton.onclick = function () {
+      showQuadtree = !showQuadtree;
+      showQuadtreeButton.textContent = "".concat(showQuadtree ? 'Hide' : 'Show', " quadtree");
+    };
+
+    contentContainer = document.querySelector(".content-container");
+    boidController = document.querySelector(".boid-controller");
     document.querySelectorAll(".stacks-content > a > img").forEach(function (elem) {
       return fadeInElements.push(elem);
     });
@@ -29305,7 +29364,19 @@ var sketch = function sketch(p5) {
 
   p5.draw = function () {
     p5.background(0);
-    if (!hideFlock) flock.update(addBoidOnClick);
+    if (!hideFlock) flock.update({
+      addBoidOnClick: addBoidOnClick,
+      showQuadtree: showQuadtree,
+      showRadius: showRadius,
+      alignCoefficient: alignCoefficientSlider.value(),
+      cohesionCoefficient: cohesionCoefficientSlider.value(),
+      separationCoefficient: separationCoefficientSlider.value(),
+      alignRadius: alignRadiusSlider.value(),
+      cohesionRadius: cohesionRadiusSlider.value(),
+      separationRadius: separationRadiusSlider.value(),
+      maxSpeed: maxSpeedSlider.value(),
+      maxForce: maxForceSlider.value()
+    });
   };
 
   p5.windowResized = function () {
@@ -29313,9 +29384,18 @@ var sketch = function sketch(p5) {
     flock.resizeTank(p5.windowWidth, p5.windowHeight);
     setOpacityOnScroll(fadeInElements, contentContainer.scrollTop);
   };
+
+  function createSlider(parent, value) {
+    var slider = p5.createSlider(0, value * 2, value, value / 10);
+    slider.parent(parent);
+    slider.size(250);
+    return slider;
+  }
 };
 
-new p5_1.default(sketch);
+window.onload = function () {
+  new p5_1.default(sketch);
+};
 
 function setOpacityOnScroll(elements, currentScroll, heightCoef) {
   if (heightCoef === void 0) {
@@ -29326,7 +29406,7 @@ function setOpacityOnScroll(elements, currentScroll, heightCoef) {
     element.style.opacity = String((currentScroll + window.innerHeight - element.offsetTop) / (heightCoef * element.scrollHeight));
   });
 }
-},{"p5":"node_modules/p5/lib/p5.min.js","./flock/flock":"src/flock/flock.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"p5":"node_modules/p5/lib/p5.min.js","./flock/flock":"src/flock/flock.ts","./flock/constant":"src/flock/constant.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -29354,7 +29434,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64154" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59662" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
