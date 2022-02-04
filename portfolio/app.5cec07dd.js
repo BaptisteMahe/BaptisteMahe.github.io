@@ -28986,19 +28986,19 @@ function () {
   };
 
   Boid.prototype.flock = function (quadtree, options) {
-    this.alignRadius = options.alignRadius;
-    this.cohesionRadius = options.cohesionRadius;
-    this.separationRadius = options.separationRadius;
     this.maxSpeed = options.maxSpeed;
     this.maxForce = options.maxForce;
+    this.alignRadius = options.alignRadius;
     var alignment = this.align(quadtree);
-    var cohesion = this.cohesion(quadtree);
-    var separation = this.separation(quadtree);
     alignment.mult(options.alignCoefficient);
-    cohesion.mult(options.cohesionCoefficient);
-    separation.mult(options.separationCoefficient);
     this.acceleration.add(alignment);
+    this.cohesionRadius = options.cohesionRadius;
+    var cohesion = this.cohesion(quadtree);
+    cohesion.mult(options.cohesionCoefficient);
     this.acceleration.add(cohesion);
+    this.separationRadius = options.separationRadius;
+    var separation = this.separation(quadtree);
+    separation.mult(options.separationCoefficient);
     this.acceleration.add(separation);
   };
 
@@ -29268,6 +29268,7 @@ var sketch = function sketch(p5) {
   var flock;
   var hideFlockButton;
   var hideFlock = false;
+  var announcementIcon;
   var hideContentButton;
   var hideContent = false;
   var boidController;
@@ -29285,6 +29286,8 @@ var sketch = function sketch(p5) {
   var showRadius = false;
   var showQuadtreeButton;
   var showQuadtree = false;
+  var hideBoidControllerButton;
+  var hideBoidController = false;
   var contentContainer;
   var fadeInElements = [];
   var contactLinks;
@@ -29307,20 +29310,28 @@ var sketch = function sketch(p5) {
       hideFlockButton.textContent = "".concat(hideFlock ? 'Show' : 'Hide', " flock");
     };
 
+    announcementIcon = document.querySelector(".mat-announcement-icon");
     hideContentButton = document.querySelector("#hide-content-button");
 
     hideContentButton.onclick = function () {
       hideContent = !hideContent;
       hideContentButton.textContent = "".concat(hideContent ? 'Show' : 'Hide', " text");
-      hideContent ? contentContainer.classList.add('hidden') : contentContainer.classList.remove('hidden');
-      hideContent ? boidController.classList.remove('hidden') : boidController.classList.add('hidden');
+
+      if (hideContent) {
+        contentContainer.classList.add('hidden');
+        announcementIcon.classList.add('hidden');
+        boidController.classList.remove('hidden');
+      } else {
+        contentContainer.classList.remove('hidden');
+        boidController.classList.add('hidden');
+      }
     };
 
     addBoidOnClickButton = document.querySelector("#add-boid-button");
 
     addBoidOnClickButton.onclick = function () {
       addBoidOnClick = !addBoidOnClick;
-      addBoidOnClickButton.textContent = "".concat(addBoidOnClick ? 'Add' : 'Remove', " boid on click");
+      addBoidOnClickButton.textContent = "".concat(addBoidOnClick ? 'Stop add' : 'Add', " boid on click");
     };
 
     showRadiusButton = document.querySelector("#show-radius-button");
@@ -29337,8 +29348,26 @@ var sketch = function sketch(p5) {
       showQuadtreeButton.textContent = "".concat(showQuadtree ? 'Hide' : 'Show', " quadtree");
     };
 
-    contentContainer = document.querySelector(".content-container");
     boidController = document.querySelector(".boid-controller");
+    hideBoidControllerButton = document.querySelector(".hide-boid-controller-button");
+
+    hideBoidControllerButton.onclick = function () {
+      if (hideBoidController) {
+        boidController.style.transform = "translateY(0px)";
+        setTimeout(function () {
+          return hideBoidControllerButton.textContent = "Hide controller";
+        }, 2500);
+      } else {
+        boidController.style.transform = "translateY(-".concat(boidController.scrollHeight - 30, "px)");
+        setTimeout(function () {
+          return hideBoidControllerButton.textContent = "Show controller";
+        }, 2500);
+      }
+
+      hideBoidController = !hideBoidController;
+    };
+
+    contentContainer = document.querySelector(".content-container");
     document.querySelectorAll(".stacks-content > a > img").forEach(function (elem) {
       return fadeInElements.push(elem);
     });
@@ -29388,7 +29417,12 @@ var sketch = function sketch(p5) {
   function createSlider(parent, value) {
     var slider = p5.createSlider(0, value * 2, value, value / 10);
     slider.parent(parent);
-    slider.size(250);
+    displaySliderValue("#".concat(parent, "-value"), slider.value());
+    slider.size(250); // @ts-ignore
+
+    slider.input(function () {
+      return displaySliderValue("#".concat(parent, "-value"), slider.value());
+    });
     return slider;
   }
 };
@@ -29405,6 +29439,10 @@ function setOpacityOnScroll(elements, currentScroll, heightCoef) {
   elements.forEach(function (element) {
     element.style.opacity = String((currentScroll + window.innerHeight - element.offsetTop) / (heightCoef * element.scrollHeight));
   });
+}
+
+function displaySliderValue(placeholderQuerySelector, value) {
+  document.querySelector(placeholderQuerySelector).textContent = value;
 }
 },{"p5":"node_modules/p5/lib/p5.min.js","./flock/flock":"src/flock/flock.ts","./flock/constant":"src/flock/constant.ts"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -29434,7 +29472,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59662" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50399" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

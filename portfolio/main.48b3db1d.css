@@ -62,6 +62,12 @@ a {
   padding: 10px 15px;
   font-size: 20px;
 }
+.global-actions .mat-announcement-icon {
+  font-family: material icons, serif;
+  position: relative;
+  top: -60px;
+  right: -102px;
+}
 
 .boid-controller-wrapper {
   display: flex;
@@ -69,15 +75,18 @@ a {
 }
 .boid-controller-wrapper .boid-controller {
   margin-top: -10px;
-  padding: 15px;
+  padding: 15px 15px 0;
   text-align: center;
+  display: flex;
+  flex-direction: column;
   border-radius: 10px;
   border: 2px solid white;
   background-color: rgba(255, 255, 255, 0.2);
   font-size: 20px;
+  transition: transform 2.5s 0.25s cubic-bezier(0, 1, 0.3, 1), opacity 0.3s 0.25s ease-out;
 }
 .boid-controller-wrapper .boid-controller h1 {
-  margin-top: 10px;
+  margin: 0 0 10px;
 }
 .boid-controller-wrapper .boid-controller .behaviour-controllers {
   display: flex;
@@ -86,7 +95,13 @@ a {
 }
 .boid-controller-wrapper .boid-controller .behaviour-controllers h5 {
   font-size: 30px;
-  margin: 10px;
+  margin: 10px 0 0;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers .slider-wrapper {
+  margin-bottom: 10px;
+}
+.boid-controller-wrapper .boid-controller .behaviour-controllers .slider-wrapper .slider-hint {
+  font-size: 15px;
 }
 .boid-controller-wrapper .boid-controller .behaviour-controllers .coef-and-radius-wrapper {
   display: flex;
@@ -94,8 +109,21 @@ a {
 .boid-controller-wrapper .boid-controller .behaviour-controllers .coef-and-radius-wrapper > div {
   margin: 0 10px;
 }
-.boid-controller-wrapper .boid-controller .behaviour-controllers .boid-controller-buttons > button {
+.boid-controller-wrapper .boid-controller .behaviour-controllers .boid-controller-buttons :nth-child(2) {
   margin: 15px 5px 0;
+}
+.boid-controller-wrapper .boid-controller .hide-boid-controller-button {
+  position: relative;
+  top: 24px;
+  padding: 2px 7px 5px;
+  align-self: flex-end;
+  font-weight: bold;
+  background-color: white;
+  border: none;
+  border-radius: 0 0 5px 5px;
+}
+.boid-controller-wrapper .boid-controller .hide-boid-controller-button:hover {
+  cursor: pointer;
 }
 
 .content-container {
@@ -219,9 +247,33 @@ a {
 }
 
 @media screen and (max-width: 600px) {
+  h1 {
+    font-size: 30px;
+  }
+
   .global-actions .big-button {
     padding: 5px 10px;
     font-size: 15px;
+  }
+  .global-actions .mat-announcement-icon {
+    top: -44px;
+    right: -70px;
+  }
+
+  .boid-controller-wrapper .boid-controller {
+    overflow-y: visible;
+    font-size: 15px;
+  }
+  .boid-controller-wrapper .boid-controller .behaviour-controllers h5 {
+    font-size: 20px;
+    margin: 5px 0 0;
+  }
+  .boid-controller-wrapper .boid-controller .behaviour-controllers .slider-wrapper {
+    margin-bottom: 5px;
+  }
+  .boid-controller-wrapper .boid-controller .behaviour-controllers .coef-and-radius-wrapper {
+    display: flex;
+    flex-direction: column;
   }
 
   .content-container .content-wrapper {
