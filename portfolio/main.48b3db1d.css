@@ -271,10 +271,6 @@ a {
   .boid-controller-wrapper .boid-controller .behaviour-controllers .slider-wrapper {
     margin-bottom: 5px;
   }
-  .boid-controller-wrapper .boid-controller .behaviour-controllers .coef-and-radius-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
 
   .content-container .content-wrapper {
     max-width: 95%;

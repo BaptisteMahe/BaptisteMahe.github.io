@@ -29418,7 +29418,7 @@ var sketch = function sketch(p5) {
     var slider = p5.createSlider(0, value * 2, value, value / 10);
     slider.parent(parent);
     displaySliderValue("#".concat(parent, "-value"), slider.value());
-    slider.size(250); // @ts-ignore
+    slider.size(p5.windowWidth > 600 ? 250 : 150); // @ts-ignore
 
     slider.input(function () {
       return displaySliderValue("#".concat(parent, "-value"), slider.value());
@@ -29472,7 +29472,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50399" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54864" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
