@@ -9,6 +9,11 @@ body {
   font-size: 30px;
 }
 
+.p5Canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
 #sketch {
   height: 100vh;
   width: 100vw;
@@ -267,6 +272,7 @@ a {
   }
   .boid-controller-wrapper .boid-controller > h1 {
     margin: 0 0 30px;
+    text-align: left;
   }
   .boid-controller-wrapper .boid-controller .behaviour-controllers h5 {
     font-size: 20px;
