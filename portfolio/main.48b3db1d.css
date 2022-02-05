@@ -12,6 +12,7 @@ body {
 #sketch {
   height: 100vh;
   width: 100vw;
+  overflow: hidden;
 }
 #sketch > canvas {
   position: absolute;
@@ -248,7 +249,7 @@ a {
 
 @media screen and (max-width: 600px) {
   h1 {
-    font-size: 30px;
+    font-size: 25px;
   }
 
   .global-actions .big-button {
@@ -264,6 +265,9 @@ a {
     overflow-y: visible;
     font-size: 15px;
   }
+  .boid-controller-wrapper .boid-controller > h1 {
+    margin: 0 0 30px;
+  }
   .boid-controller-wrapper .boid-controller .behaviour-controllers h5 {
     font-size: 20px;
     margin: 5px 0 0;
@@ -276,6 +280,7 @@ a {
     max-width: 95%;
   }
   .content-container .content-wrapper .title {
+    margin-top: 70px;
     font-size: 50px;
   }
   .content-container .content-wrapper .hero .hero-content {
