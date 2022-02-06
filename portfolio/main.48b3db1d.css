@@ -56,6 +56,7 @@ a {
   position: absolute;
   top: 0;
   right: 0;
+  overflow: hidden;
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -79,7 +80,6 @@ a {
 .boid-controller-wrapper {
   display: flex;
   justify-content: center;
-  overflow: hidden;
 }
 .boid-controller-wrapper .boid-controller {
   margin-top: -10px;
@@ -205,8 +205,7 @@ a {
   margin-bottom: 5px;
 }
 .content-container .content-wrapper .education-section .centrale-logo {
-  height: 150px;
-  max-width: 100%;
+  max-width: 80%;
   margin-bottom: 10px;
 }
 .content-container .content-wrapper .education-section .resume-sub-section {
@@ -223,6 +222,9 @@ a {
 .content-container .content-wrapper .education-section .resume-sub-section .resume-links a > img {
   width: 70px;
   height: 80px;
+}
+.content-container .content-wrapper .passion-section #clean-code-img {
+  max-width: 90vw;
 }
 .content-container .content-wrapper .contact-section .social-networks {
   display: flex;
@@ -283,6 +285,9 @@ a {
   }
   .boid-controller-wrapper .boid-controller .behaviour-controllers .slider-wrapper {
     margin-bottom: 5px;
+  }
+  .boid-controller-wrapper .boid-controller .hide-boid-controller-button {
+    align-self: flex-start;
   }
 
   .content-container .content-wrapper {
